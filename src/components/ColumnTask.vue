@@ -22,7 +22,10 @@
 
 <script>
 
+import movingTasksAndColumnsMixin from '@/mixins/movingTasksAndColumnsMixin'
+
 export default {
+  mixins: [movingTasksAndColumnsMixin],
   props: {
     task: {
       type: Object,
@@ -31,18 +34,6 @@ export default {
     taskIndex: {
       type: Number,
       required: true
-    },
-    column: {
-      type: Object,
-      require: true
-    },
-    columnIndex: {
-      type: Number,
-      required: true
-    },
-    board: {
-      type: Object,
-      require: true
     }
   },
   methods: {
@@ -56,34 +47,6 @@ export default {
       e.dataTransfer.setData('from-task-index', taskIndex)
       e.dataTransfer.setData('from-column-index', fromColumnIndex)
       e.dataTransfer.setData('type', 'task')
-    },
-    moveTaskOrColumn (e, toTasks, toColumnIndex, toTaskIndex) {
-      const type = e.dataTransfer.getData('type')
-      if (type === 'task') {
-        this.moveTask(e, toTasks, toTaskIndex !== undefined ? toTaskIndex : toTasks.length)
-      } else {
-        this.moveColumn(e, toColumnIndex)
-      }
-    },
-    moveTask (e, toTasks, toTaskIndex) {
-      const fromColumnIndex = e.dataTransfer.getData('from-column-index')
-      const fromTasks = this.board.columns[fromColumnIndex].tasks
-      const fromtaskIndex = e.dataTransfer.getData('from-task-index')
-
-      this.$store.commit('MOVE_TASK', {
-        fromTasks,
-        fromtaskIndex,
-        toTasks,
-        toTaskIndex
-      })
-    },
-    moveColumn (e, toColumnIndex) {
-      const fromColumnIndex = e.dataTransfer.getData('from-column-index')
-
-      this.$store.commit('MOVE_COLUMN', {
-        fromColumnIndex,
-        toColumnIndex
-      })
     }
   }
 
